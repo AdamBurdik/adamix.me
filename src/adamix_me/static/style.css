@@ -1,5 +1,5 @@
 :root {
-  --bg: #1a1a1a;
+  --bg: #15151a;
   --text: #e8e8e8;
   --text-muted: #8a8a8a;
   --text-faint: #606060;
@@ -30,6 +30,12 @@ body {
 
 .now-playing.is-playing {
   display: flex;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.now-playing.is-playing:hover {
+  opacity: 0.85;
 }
 
 .status {
@@ -67,12 +73,12 @@ body {
 
 .avatar {
   position: absolute;
-  right: -10px;
-  bottom: -10px;
+  right: -18px;
+  bottom: -18px;
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border: 3px solid var(--bg);
+  border: 5px solid var(--bg);
   object-fit: cover;
   background: #2a2a2a;
 }
@@ -106,8 +112,7 @@ body {
   font-size: 0.85rem;
   margin-top: 2px;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
 }
 
 @media (max-width: 480px) {

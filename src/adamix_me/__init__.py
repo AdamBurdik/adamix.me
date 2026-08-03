@@ -46,7 +46,9 @@ async def now_playing():
     )
     duration_ms = (meta.get("additional_info") or {}).get("duration_ms")
 
-    cover_url, avatar_url = await _search_deezer(title, artist)
+    cover_url, avatar_url, track_url = await _search_deezer(
+        title, artist, album, duration_ms
+    )
 
     return {
         "playing_now": True,
@@ -56,37 +58,72 @@ async def now_playing():
         "duration_ms": duration_ms,
         "cover_url": cover_url,
         "avatar_url": avatar_url,
+        "track_url": track_url,
     }
 
 
-async def _search_deezer(title: str, artist: str) -> tuple[str | None, str | None]:
-    query = f'track:"{title}" artist:"{artist}"'
-    try:
-        resp = await _client.get(DEEZER_SEARCH_URL, params={"q": query, "limit": 5})
-        resp.raise_for_status()
-        results = resp.json().get("data") or []
-    except Exception:
-        return None, None
-
+async def _search_deezer(
+    title: str, artist: str, album: str, duration_ms: int | None
+) -> tuple[str | None, str | None, str | None]:
     t = title.lower()
     a = artist.lower()
+    al = album.lower()
+    dm = duration_ms
 
     def score(candidate) -> int:
         ct = (candidate.get("title") or "").lower()
         ca = (candidate.get("artist") or {}).get("name", "").lower()
-        if ct == t and ca == a:
-            return 3
-        if ct == t or ca == a:
-            return 2
-        return 1
+        cal = ((candidate.get("album") or {}).get("title") or "").lower()
+        cd = candidate.get("duration")
 
-    best = max(results, key=score, default=None)
-    if best is None:
-        return None, None
+        s = 0
+        if ct == t:
+            s += 4
+        elif t in ct:
+            s += 2
+        if ca == a:
+            s += 4
+        elif a in ca:
+            s += 2
+        if al != "unknown album":
+            if cal == al:
+                s += 6
+            elif al in cal or cal in al:
+                s += 2
+        if dm and cd:
+            delta = abs(cd * 1000 - dm)
+            if delta <= 2000:
+                s += 4
+            elif delta <= 5000:
+                s += 1
+        return s
+
+    async def search(query: str) -> list:
+        try:
+            resp = await _client.get(DEEZER_SEARCH_URL, params={"q": query, "limit": 10})
+            resp.raise_for_status()
+            return resp.json().get("data") or []
+        except Exception:
+            return []
+
+    queries = [f'track:"{title}" artist:"{artist}"']
+    if al != "unknown album":
+        queries.insert(0, f'track:"{title}" artist:"{artist}" album:"{album}"')
+
+    best = None
+    for q in queries:
+        results = await search(q)
+        best = max(results, key=score, default=None)
+        if best is not None and score(best) >= 4:
+            break
+
+    if best is None or score(best) < 4:
+        return None, None, None
 
     return (
         (best.get("album") or {}).get("cover_medium"),
         (best.get("artist") or {}).get("picture_medium"),
+        best.get("link"),
     )
 
 

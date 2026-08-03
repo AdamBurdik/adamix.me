@@ -54,3 +54,20 @@ async function refresh() {
 
 refresh();
 setInterval(refresh, POLL_INTERVAL_MS);
+
+const ODESLI_API = "https://api.song.link/v1-alpha.1/links";
+
+root.addEventListener("click", async () => {
+  if (!currentTrack || !currentTrack.track_url) return;
+
+  const win = window.open("", "_blank");
+  try {
+    const res = await fetch(
+      `${ODESLI_API}?url=${encodeURIComponent(currentTrack.track_url)}&type=song`
+    );
+    const data = await res.json();
+    win.location.href = data.pageUrl || currentTrack.track_url;
+  } catch {
+    win.location.href = currentTrack.track_url;
+  }
+});
