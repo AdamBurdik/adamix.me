@@ -19,3 +19,6 @@ adamix-me = "adamix_me:main"
 [build-system]
 requires = ["uv_build>=0.12.0,<0.13.0"]
 build-backend = "uv_build"
+
+[tool.vercel]
+entrypoint = "src.adamix_me:app"
