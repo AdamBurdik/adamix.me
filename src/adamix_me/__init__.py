@@ -106,9 +106,9 @@ async def _search_deezer(
         except Exception:
             return []
 
-    queries = [f'track:"{title}" artist:"{artist}"']
+    queries = [f"{title} {artist}"]
     if al != "unknown album":
-        queries.insert(0, f'track:"{title}" artist:"{artist}" album:"{album}"')
+        queries.insert(0, f"{title} {artist} {album}")
 
     best = None
     for q in queries:
