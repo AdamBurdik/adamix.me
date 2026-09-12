@@ -55,6 +55,62 @@ async function refresh() {
 refresh();
 setInterval(refresh, POLL_INTERVAL_MS);
 
+const echo = document.getElementById("echo");
+const echoTime = document.getElementById("echo-time");
+const ECHO_SECRET = "suvacraft";
+
+let echoForced = false;
+let forcedMinute = -1;
+let echoDismissed = false;
+let dismissedMinute = -1;
+let typed = "";
+
+echo.addEventListener("click", () => {
+  if (!echo.classList.contains("is-active")) return;
+  echoDismissed = true;
+  dismissedMinute = new Date().getMinutes();
+  echo.classList.remove("is-active");
+});
+
+window.addEventListener("keydown", (e) => {
+  if (e.key.length !== 1) return;
+
+  typed = (typed + e.key.toLowerCase()).slice(-ECHO_SECRET.length);
+  if (typed === ECHO_SECRET) {
+    echoForced = true;
+    forcedMinute = new Date().getMinutes();
+    updateEcho();
+  }
+});
+
+function updateEcho() {
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2, "0");
+  const mm = String(now.getMinutes()).padStart(2, "0");
+
+  if (echoForced && now.getMinutes() !== forcedMinute) {
+    echoForced = false;
+  }
+  if (echoDismissed && now.getMinutes() !== dismissedMinute) {
+    echoDismissed = false;
+  }
+
+  if ((hh === mm || echoForced) && !echoDismissed) {
+    echoTime.textContent = `${hh}:${mm}`;
+    echo.classList.add("is-active");
+  } else {
+    echo.classList.remove("is-active");
+  }
+}
+
+updateEcho();
+setInterval(updateEcho, 1000);
+
+const hint = document.getElementById("hint");
+if (Math.random() < 1 / 3) {
+  hint.classList.add("is-visible");
+}
+
 const ODESLI_API = "https://api.song.link/v1-alpha.1/links";
 
 root.addEventListener("click", async () => {

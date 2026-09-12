@@ -20,7 +20,7 @@ body {
 
 .now-playing {
   position: absolute;
-  bottom: 28px;
+  bottom: 38px;
   left: 28px;
   width: 340px;
   display: none;
@@ -115,11 +115,126 @@ body {
   overflow: visible;
 }
 
+.echo {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(21, 21, 26, 0.72);
+  text-align: center;
+}
+
+.echo.is-active {
+  display: flex;
+  cursor: pointer;
+}
+
+.echo-time {
+  font-size: clamp(4rem, 20vw, 11rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.echo.is-active .echo-time {
+  animation: echo-spin 0.9s linear infinite;
+}
+
+@keyframes echo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.echo-sub {
+  color: var(--text-muted);
+  font-size: clamp(0.85rem, 3vw, 1.1rem);
+}
+
+.links {
+  position: absolute;
+  right: 28px;
+  bottom: 38px;
+  z-index: 5;
+  display: flex;
+  gap: 10px;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 8px 14px;
+  border: 1px solid rgba(138, 138, 138, 0.3);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+}
+
+.link svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
+.link:hover {
+  color: var(--text);
+  border-color: rgba(138, 138, 138, 0.55);
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+.hint {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  color: var(--text-faint);
+  font-size: 0.72rem;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  pointer-events: none;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.hint.is-visible {
+  opacity: 1;
+}
+
+@media (max-width: 700px) {
+  .links {
+    top: 10px;
+    right: 20px;
+    bottom: auto;
+  }
+}
+
 @media (max-width: 480px) {
   .now-playing {
     width: 300px;
-    bottom: 20px;
+    bottom: 30px;
     left: 20px;
+  }
+
+  .hint {
+    bottom: 8px;
+    white-space: nowrap;
+    max-width: none;
   }
 
   .cover-wrap {
