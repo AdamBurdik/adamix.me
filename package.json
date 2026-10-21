@@ -1,0 +1,12 @@
+{
+  "name": "adamix-me",
+  "private": true,
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/adamix_me/static/input.css -o ./src/adamix_me/static/style.css --minify",
+    "watch:css": "tailwindcss -i ./src/adamix_me/static/input.css -o ./src/adamix_me/static/style.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}

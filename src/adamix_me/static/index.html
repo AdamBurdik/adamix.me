@@ -3,43 +3,104 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#121214" />
     <title>adamix.me</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/static/style.css" />
+    <script src="/static/app.js" defer></script>
   </head>
-  <body>
-    <main class="now-playing" id="now-playing" aria-live="polite">
-      <div class="status" id="status">Listening to</div>
-      <div class="body">
-        <div class="cover-wrap">
-          <img class="cover" id="cover" alt="Album cover" />
-          <img class="avatar" id="avatar" alt="Artist" />
+  <body class="page">
+    <main class="layout">
+      <div class="top">
+        <div class="tile tile--top tile--left name">
+          <h1 class="wordmark">adamix</h1>
         </div>
-        <div class="meta">
-          <div class="title" id="title">—</div>
-          <div class="artist" id="artist">—</div>
-          <div class="album" id="album">—</div>
+
+        <nav class="links" aria-label="Links">
+          <a
+            class="tile tile--top link-tile"
+            href="https://github.com/AdamBurdik"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>GitHub</span>
+          </a>
+          <a
+            class="tile link-tile"
+            href="https://myanimelist.net/profile/adamix"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>MAL</span>
+          </a>
+          <a
+            class="tile link-tile"
+            href="https://listenbrainz.org/user/adamix/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>ListenBrainz</span>
+          </a>
+        </nav>
+
+        <div class="tile tile--left player" id="now-info" aria-live="polite">
+          <div class="player-cover" aria-hidden="true">
+            <img id="np-cover" alt="" hidden />
+            <span class="player-cover-empty">no cover :(</span>
+          </div>
+          <div class="player-body">
+            <p class="player-head">
+              <span class="live-dot" aria-hidden="true">•</span>
+              <span>Now playing</span>
+            </p>
+            <p class="player-title" id="np-title">Nothing playing</p>
+            <p class="player-artist" id="np-artist">...</p>
+            <p class="player-album" id="np-album" hidden></p>
+          </div>
+        </div>
+
+        <section class="tile tile--top tracks" aria-label="Top tracks">
+          <h2 class="tracks-title">Top Tracks (past week)</h2>
+          <ol id="top-tracks">
+            <li class="empty">loading…</li>
+          </ol>
+        </section>
+
+        <button
+          class="tile tile--top discord"
+          id="discord-card"
+          type="button"
+          data-username="adamix.dev"
+          title="Copy Discord username"
+        >
+          <span>
+            <span class="discord-label" id="discord-label" aria-live="polite"
+              >Discord</span
+            >
+            <span class="discord-user">@adamix.dev</span>
+          </span>
+        </button>
+
+        <div class="tile tile--top life">
+          <span class="life-label">Life</span>
+          <canvas
+            id="gol-canvas"
+            role="img"
+            aria-label="Conway's Game of Life animation"
+          ></canvas>
         </div>
       </div>
+
+      <section class="tile tile--left log" aria-label="Activity log">
+        <ul id="activity">
+          <li class="empty">loading…</li>
+        </ul>
+      </section>
     </main>
-    <nav class="links" aria-label="Links">
-      <a class="link" href="https://github.com/adamBurdik/" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-        GitHub
-      </a>
-      <a class="link" href="https://myanimelist.net/profile/AdamIx4644" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1.5" y="4" width="21" height="16" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 8.5v7l6-3.5z" fill="currentColor"/></svg>
-        MAL
-      </a>
-      <a class="link" href="https://listenbrainz.org/user/adamix/" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h2v4M7 8h2v8M11 5h2v14M15 9h2v6M19 11h2v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        ListenBrainz
-      </a>
-    </nav>
-    <p class="hint" id="hint">Something cool might appear here sometime.</p>
-    <section class="echo" id="echo" aria-hidden="true">
-      <div class="echo-time" id="echo-time"></div>
-      <div class="echo-sub">suvacraft reference??</div>
-    </section>
-    <script src="/static/app.js"></script>
   </body>
 </html>
