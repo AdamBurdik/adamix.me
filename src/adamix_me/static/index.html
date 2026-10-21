@@ -3,96 +3,100 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#15151b" />
+    <meta name="theme-color" content="#121214" />
     <title>adamix.me</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/static/style.css" />
     <script src="/static/app.js" defer></script>
   </head>
-  <body>
+  <body class="page">
     <main class="layout">
       <div class="top">
-        <section class="profile" aria-label="Profile">
-          <div class="cell hero">
-            <h1 class="wordmark">adamix</h1>
-          </div>
+        <div class="tile tile--top tile--left name">
+          <h1 class="wordmark">adamix</h1>
+        </div>
 
-          <nav class="links" aria-label="Links">
-            <a
-              class="cell link"
-              href="https://github.com/AdamBurdik"
-              target="_blank"
-              rel="noopener noreferrer"
-              >GitHub</a
-            >
-            <a
-              class="cell link"
-              href="https://myanimelist.net/profile/adamix"
-              target="_blank"
-              rel="noopener noreferrer"
-              >MAL</a
-            >
-            <a
-              class="cell link"
-              href="https://listenbrainz.org/user/adamix/"
-              target="_blank"
-              rel="noopener noreferrer"
-              >ListenBrainz</a
-            >
-          </nav>
-
-          <div class="now">
-            <div class="cell now-art" id="now-art">
-              <img class="cover" id="np-cover" alt="" hidden />
-              <span class="rotated" id="np-cover-fallback">Now Playing</span>
-            </div>
-
-            <div class="cell now-info" id="now-info" aria-live="polite">
-              <div class="np-head">
-                <span class="live-dot" aria-hidden="true"></span>
-                <span>Now playing</span>
-              </div>
-              <p class="np-title" id="np-title">Nothing playing</p>
-              <p class="np-artist" id="np-artist">silence is golden</p>
-              <p class="np-album" id="np-album"></p>
-            </div>
-          </div>
-        </section>
-
-        <section class="right" aria-label="Stats and play">
-          <div class="cell top-tracks">
-            <h2 class="hand">Top Tracks</h2>
-            <ol id="top-tracks">
-              <li class="empty">loading…</li>
-            </ol>
-          </div>
-
-          <button
-            class="cell discord"
-            id="discord-card"
-            type="button"
-            data-username="adamix"
-            title="Copy Discord username"
+        <nav class="links" aria-label="Links">
+          <a
+            class="tile tile--top link-tile"
+            href="https://github.com/AdamBurdik"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            Discord
-          </button>
+            <span>GitHub</span>
+          </a>
+          <a
+            class="tile link-tile"
+            href="https://myanimelist.net/profile/adamix"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>MAL</span>
+          </a>
+          <a
+            class="tile link-tile"
+            href="https://listenbrainz.org/user/adamix/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>ListenBrainz</span>
+          </a>
+        </nav>
 
-          <div class="cell gol">
-            <canvas
-              id="gol-canvas"
-              role="img"
-              aria-label="Conway's Game of Life animation"
-            ></canvas>
+        <div class="tile tile--left player" id="now-info" aria-live="polite">
+          <div class="player-cover" aria-hidden="true">
+            <img id="np-cover" alt="" hidden />
+            <span class="player-cover-empty">no cover :(</span>
           </div>
+          <div class="player-body">
+            <p class="player-head">
+              <span class="live-dot" aria-hidden="true">•</span>
+              <span>Now playing</span>
+            </p>
+            <p class="player-title" id="np-title">Nothing playing</p>
+            <p class="player-artist" id="np-artist">...</p>
+            <p class="player-album" id="np-album" hidden></p>
+          </div>
+        </div>
+
+        <section class="tile tile--top tracks" aria-label="Top tracks">
+          <h2 class="tracks-title">Top Tracks (past week)</h2>
+          <ol id="top-tracks">
+            <li class="empty">loading…</li>
+          </ol>
         </section>
+
+        <button
+          class="tile tile--top discord"
+          id="discord-card"
+          type="button"
+          data-username="adamix.dev"
+          title="Copy Discord username"
+        >
+          <span>
+            <span class="discord-label" id="discord-label" aria-live="polite"
+              >Discord</span
+            >
+            <span class="discord-user">@adamix.dev</span>
+          </span>
+        </button>
+
+        <div class="tile tile--top life">
+          <span class="life-label">Life</span>
+          <canvas
+            id="gol-canvas"
+            role="img"
+            aria-label="Conway's Game of Life animation"
+          ></canvas>
+        </div>
       </div>
 
-      <section class="cell log" aria-label="Activity log">
+      <section class="tile tile--left log" aria-label="Activity log">
         <ul id="activity">
           <li class="empty">loading…</li>
         </ul>

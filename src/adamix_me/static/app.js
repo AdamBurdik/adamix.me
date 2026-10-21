@@ -19,55 +19,37 @@ async function getJSON(url) {
 
 let coverToken = 0;
 
-function renderCover(data, playing) {
+function setCover(url) {
   const cover = $("#np-cover");
-  const fallback = $("#np-cover-fallback");
-  if (!cover || !fallback) return;
+  const empty = $(".player-cover-empty");
+  if (!cover) return;
 
-  const token = ++coverToken;
-  const url = playing && data ? data.cover_url : "";
+  coverToken += 1;
+  const token = coverToken;
 
   if (!url) {
-    cover.onload = null;
-    cover.onerror = null;
     cover.hidden = true;
     cover.removeAttribute("src");
-    cover.alt = "";
-    fallback.hidden = false;
+    delete cover.dataset.src;
+    if (empty) empty.hidden = false;
     return;
   }
 
-  const album = data.album && data.album !== "Unknown album" ? data.album : "";
-  const label = album || data.title || "Album";
-  const alt = `${label} cover`;
+  if (cover.dataset.src === url) return;
 
-  if (
-    cover.getAttribute("src") === url &&
-    cover.complete &&
-    cover.naturalWidth > 0
-  ) {
-    cover.alt = alt;
-    cover.hidden = false;
-    fallback.hidden = true;
-    return;
-  }
-
+  cover.dataset.src = url;
   cover.hidden = true;
-  fallback.hidden = false;
-  cover.alt = alt;
-
   cover.onload = () => {
     if (token !== coverToken) return;
     cover.hidden = false;
-    fallback.hidden = true;
+    if (empty) empty.hidden = true;
   };
-
   cover.onerror = () => {
     if (token !== coverToken) return;
     cover.hidden = true;
-    fallback.hidden = false;
+    delete cover.dataset.src;
+    if (empty) empty.hidden = false;
   };
-
   cover.src = url;
 }
 
@@ -76,22 +58,31 @@ function renderNowPlaying(data) {
   const title = $("#np-title");
   const artist = $("#np-artist");
   const album = $("#np-album");
-  if (!info || !title || !artist || !album) return;
+  if (!info || !title || !artist) return;
 
   const playing = Boolean(data && data.playing_now);
   info.classList.toggle("is-playing", playing);
-  renderCover(data, playing);
 
   if (!playing) {
+    setCover("");
     title.textContent = "Nothing playing";
-    artist.textContent = "silence is golden";
-    album.textContent = "";
+    artist.textContent = "...";
+    if (album) {
+      album.textContent = "";
+      album.hidden = true;
+    }
     return;
   }
 
+  setCover(data.cover_url || "");
   title.textContent = data.title || "Unknown track";
   artist.textContent = data.artist || "Unknown artist";
-  album.textContent = data.album && data.album !== "Unknown album" ? data.album : "";
+  const albumText =
+    data.album && data.album !== "Unknown album" ? data.album : "";
+  if (album) {
+    album.textContent = albumText;
+    album.hidden = !albumText;
+  }
 }
 
 async function loadNowPlaying() {
@@ -133,7 +124,7 @@ function renderTopTracks(tracks) {
 
     const artist = document.createElement("span");
     artist.className = "artist";
-    artist.textContent = track.artist ? `– ${track.artist}` : "";
+    artist.textContent = track.artist || "";
 
     meta.append(title, artist);
     item.append(rank, meta);
@@ -152,14 +143,16 @@ async function loadTopTracks() {
 
 /* ----- activity ----- */
 
+function pad(value) {
+  return String(value).padStart(2, "0");
+}
+
 function timeLabel(value) {
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "--:--";
-  return date.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
+  if (Number.isNaN(date.getTime())) return "--:-- --/--";
+  const time = `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  const day = `${pad(date.getDate())}/${pad(date.getMonth() + 1)}`;
+  return `${time} ${day}`;
 }
 
 function renderActivity(items) {
@@ -182,9 +175,19 @@ function renderActivity(items) {
     time.dateTime = entry.at || "";
     time.textContent = timeLabel(entry.at);
 
+    let text = entry.text || "";
+    let repoName = "";
+    if (entry.source === "github") {
+      const splitAt = text.lastIndexOf(" · ");
+      if (splitAt !== -1) {
+        repoName = text.slice(splitAt + 3).trim();
+        text = text.slice(0, splitAt).trim();
+      }
+    }
+
     const message = document.createElement("span");
     message.className = "msg";
-    message.textContent = entry.text || "";
+    message.textContent = text;
 
     if (entry.url) {
       const link = document.createElement("a");
@@ -196,6 +199,13 @@ function renderActivity(items) {
       item.append(time, link);
     } else {
       item.append(time, message);
+    }
+
+    if (repoName) {
+      const repo = document.createElement("span");
+      repo.className = "repo";
+      repo.textContent = repoName;
+      item.append(repo);
     }
 
     list.append(item);
@@ -234,17 +244,22 @@ function setupDiscord() {
   const card = $("#discord-card");
   if (!card) return;
 
+  const label = $("#discord-label");
+  const setLabel = (text) => {
+    if (label) label.textContent = text;
+  };
+
   card.addEventListener("click", async () => {
     const username = card.dataset.username || "adamix";
     try {
       await copyText(username);
-      card.textContent = "copied!";
+      setLabel("copied!");
+      card.classList.add("is-copied");
     } catch {
-      card.textContent = username;
+      setLabel("copy failed");
     }
-    card.classList.add("is-copied");
     window.setTimeout(() => {
-      card.textContent = "Discord";
+      setLabel("Discord");
       card.classList.remove("is-copied");
     }, 1600);
   });
@@ -273,7 +288,7 @@ function setupGameOfLife() {
   function seed() {
     cells = new Uint8Array(cols * rows);
     for (let i = 0; i < cells.length; i += 1) {
-      cells[i] = Math.random() < 0.26 ? 1 : 0;
+      cells[i] = Math.random() < 0.18 ? 1 : 0;
     }
   }
 
@@ -329,7 +344,7 @@ function setupGameOfLife() {
     const cellH = height / rows;
 
     context.clearRect(0, 0, width, height);
-    context.fillStyle = "rgba(112, 214, 162, 0.8)";
+    context.fillStyle = "#7a2b30";
     for (let y = 0; y < rows; y += 1) {
       for (let x = 0; x < cols; x += 1) {
         if (!cells[y * cols + x]) continue;
