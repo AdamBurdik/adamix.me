@@ -3,24 +3,100 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#15151b" />
     <title>adamix.me</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/static/style.css" />
+    <script src="/static/app.js" defer></script>
   </head>
   <body>
-    <main class="now-playing" id="now-playing" aria-live="polite">
-      <div class="status" id="status">Listening to</div>
-      <div class="body">
-        <div class="cover-wrap">
-          <img class="cover" id="cover" alt="Album cover" />
-          <img class="avatar" id="avatar" alt="Artist" />
-        </div>
-        <div class="meta">
-          <div class="title" id="title">—</div>
-          <div class="artist" id="artist">—</div>
-          <div class="album" id="album">—</div>
-        </div>
+    <main class="layout">
+      <div class="top">
+        <section class="profile" aria-label="Profile">
+          <div class="cell hero">
+            <h1 class="wordmark">adamix</h1>
+          </div>
+
+          <nav class="links" aria-label="Links">
+            <a
+              class="cell link"
+              href="https://github.com/AdamBurdik"
+              target="_blank"
+              rel="noopener noreferrer"
+              >GitHub</a
+            >
+            <a
+              class="cell link"
+              href="https://myanimelist.net/profile/adamix"
+              target="_blank"
+              rel="noopener noreferrer"
+              >MAL</a
+            >
+            <a
+              class="cell link"
+              href="https://listenbrainz.org/user/adamix/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >ListenBrainz</a
+            >
+          </nav>
+
+          <div class="now">
+            <div class="cell now-art" id="now-art">
+              <img class="cover" id="np-cover" alt="" hidden />
+              <span class="rotated" id="np-cover-fallback">Now Playing</span>
+            </div>
+
+            <div class="cell now-info" id="now-info" aria-live="polite">
+              <div class="np-head">
+                <span class="live-dot" aria-hidden="true"></span>
+                <span>Now playing</span>
+              </div>
+              <p class="np-title" id="np-title">Nothing playing</p>
+              <p class="np-artist" id="np-artist">silence is golden</p>
+              <p class="np-album" id="np-album"></p>
+            </div>
+          </div>
+        </section>
+
+        <section class="right" aria-label="Stats and play">
+          <div class="cell top-tracks">
+            <h2 class="hand">Top Tracks</h2>
+            <ol id="top-tracks">
+              <li class="empty">loading…</li>
+            </ol>
+          </div>
+
+          <button
+            class="cell discord"
+            id="discord-card"
+            type="button"
+            data-username="adamix"
+            title="Copy Discord username"
+          >
+            Discord
+          </button>
+
+          <div class="cell gol">
+            <canvas
+              id="gol-canvas"
+              role="img"
+              aria-label="Conway's Game of Life animation"
+            ></canvas>
+          </div>
+        </section>
       </div>
+
+      <section class="cell log" aria-label="Activity log">
+        <ul id="activity">
+          <li class="empty">loading…</li>
+        </ul>
+      </section>
     </main>
-    <script src="/static/app.js"></script>
   </body>
 </html>

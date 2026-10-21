@@ -1,138 +1,537 @@
 :root {
-  --bg: #15151a;
-  --text: #e8e8e8;
-  --text-muted: #8a8a8a;
-  --text-faint: #606060;
+  --bg: #15151b;
+  --text: #f2f1ee;
+  --muted: #aba7b4;
+  --faint: #6a6675;
+  --rose: #ff7a9c;
+  --amber: #ffbd5c;
+  --sage: #70d6a2;
+  --edge: 3px;
+  --hand: "Caveat", "Segoe Print", cursive;
+  --ui: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
 }
 
 body {
+  margin: 0;
   min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 4vw, 44px);
   background: var(--bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--ui);
+  -webkit-font-smoothing: antialiased;
 }
 
-.now-playing {
-  position: absolute;
-  bottom: 28px;
-  left: 28px;
-  width: 340px;
-  display: none;
+.layout {
+  width: min(1060px, 100%);
+  display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 0;
 }
 
-.now-playing.is-playing {
-  display: flex;
-  cursor: pointer;
-  transition: opacity 0.15s ease;
+.top {
+  display: grid;
+  grid-template-columns: 43fr 57fr;
+  gap: 0;
+  height: clamp(320px, min(40vw, 48vh), 432px);
+  min-width: 0;
+  min-height: 0;
 }
 
-.now-playing.is-playing:hover {
-  opacity: 0.85;
-}
-
-.status {
-  color: var(--text-muted);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
-.body {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-}
-
-.cover-wrap {
+.cell {
   position: relative;
-  flex-shrink: 0;
-  width: 120px;
-  height: 120px;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 0;
+  background: var(--bg);
+}
+
+/* ----- left panel ----- */
+
+.profile {
+  display: grid;
+  grid-template-columns: 56fr 44fr;
+  grid-template-rows: 54fr 46fr;
+  gap: 0;
+  min-width: 0;
+  min-height: 0;
+  border: var(--edge) solid var(--rose);
+  background: var(--bg);
+  position: relative;
+  z-index: 2;
+}
+
+.links {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 0;
+  min-width: 0;
+  min-height: 0;
+}
+
+.hero {
+  display: grid;
+  place-items: center;
+  border-right: var(--edge) solid var(--rose);
+  border-bottom: var(--edge) solid var(--rose);
+}
+
+.wordmark {
+  margin: 0;
+  font-family: var(--hand);
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: 0.01em;
+  transform: rotate(-12deg);
+  user-select: none;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  font-family: var(--hand);
+  font-size: clamp(1.2rem, 2.1vw, 1.75rem);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: var(--edge) solid var(--rose);
+}
+
+.link:hover,
+.link:focus-visible {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.now {
+  grid-column: 1 / -1;
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+}
+
+.now-art {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  height: 100%;
+  aspect-ratio: 1;
+  border-right: var(--edge) solid var(--rose);
 }
 
 .cover {
+  display: block;
   width: 100%;
   height: 100%;
-  border-radius: 6px;
   object-fit: cover;
-  display: block;
-  background: #2a2a2a;
 }
 
-.cover--placeholder {
-  object-fit: none;
+.cover[hidden] {
+  display: none;
 }
 
-.avatar {
-  position: absolute;
-  right: -18px;
-  bottom: -18px;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 5px solid var(--bg);
-  object-fit: cover;
-  background: #2a2a2a;
+.rotated {
+  color: var(--rose);
+  font-family: var(--hand);
+  font-size: clamp(1.5rem, 2.8vw, 2.3rem);
+  font-weight: 600;
+  transform: rotate(42deg);
+  white-space: nowrap;
+  user-select: none;
 }
 
-.meta {
-  flex: 1;
+.now-info {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  padding: clamp(10px, 1.5vw, 20px);
   min-width: 0;
-  padding-top: 4px;
 }
 
-.title {
-  font-size: 1.15rem;
-  font-weight: 700;
+.np-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.live-dot {
+  width: 5px;
+  height: 5px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--faint);
+}
+
+.now-info.is-playing .live-dot {
+  background: var(--rose);
+}
+
+.np-title,
+.np-artist,
+.np-album {
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.np-title {
+  font-size: clamp(0.88rem, 1.15vw, 1.02rem);
+  font-weight: 600;
+}
+
+.np-artist {
+  color: var(--muted);
+  font-size: clamp(0.76rem, 0.95vw, 0.86rem);
+}
+
+.np-album {
+  color: var(--muted);
+  font-size: clamp(0.7rem, 0.85vw, 0.78rem);
+}
+
+/* ----- right cards ----- */
+
+.right {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  min-width: 0;
+  min-height: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.right > .cell {
+  border: var(--edge) solid var(--amber);
+}
+
+.right > .cell + .cell {
+  margin-left: calc(var(--edge) * -1);
+}
+
+.right > .top-tracks {
+  border-left: 0;
+}
+
+.top-tracks {
+  flex: 52.4 1 0;
+  height: 54%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(5px, 1vh, 10px);
+  padding: clamp(10px, 1.5vw, 18px);
+}
+
+.hand {
+  margin: 0;
+  color: var(--amber);
+  font-family: var(--hand);
+  font-size: clamp(1.15rem, 1.8vw, 1.55rem);
+  font-weight: 600;
+  line-height: 1;
+}
+
+#top-tracks {
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 1.1vh, 10px);
+}
+
+#top-tracks li {
+  display: flex;
+  gap: 7px;
+  min-width: 0;
+  font-size: clamp(0.72rem, 0.95vw, 0.83rem);
   line-height: 1.3;
-  white-space: nowrap;
+}
+
+#top-tracks .rank {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+#top-tracks .meta {
+  min-width: 0;
+}
+
+#top-tracks .track {
+  display: block;
   overflow: hidden;
+  font-weight: 500;
+  white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-.artist {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  margin-top: 4px;
-  white-space: nowrap;
+#top-tracks .artist {
+  display: block;
   overflow: hidden;
+  color: var(--muted);
+  font-size: 0.94em;
+  white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-.album {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  margin-top: 2px;
-  white-space: nowrap;
-  overflow: visible;
+.discord {
+  flex: 29.7 1 0;
+  height: 20%;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: var(--amber);
+  font-family: var(--hand);
+  font-size: clamp(1.15rem, 1.8vw, 1.55rem);
+  font-weight: 600;
+  cursor: pointer;
 }
 
-@media (max-width: 480px) {
-  .now-playing {
-    width: 300px;
-    bottom: 20px;
-    left: 20px;
+.discord:hover,
+.discord:focus-visible {
+  color: #ffffff;
+}
+
+.discord.is-copied {
+  color: var(--sage);
+}
+
+.gol {
+  flex: 16.9 1 0;
+  height: 46%;
+}
+
+#gol-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ----- activity log ----- */
+
+.log {
+  height: clamp(130px, min(16vw, 20vh), 180px);
+  display: flex;
+  align-items: flex-start;
+  padding: clamp(10px, 1.5vw, 18px) clamp(12px, 2vw, 26px);
+  border: var(--edge) solid var(--sage);
+  position: relative;
+  z-index: 3;
+  margin-top: calc(var(--edge) * -1);
+}
+
+#activity {
+  width: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2px, 0.6vh, 7px);
+  font-size: clamp(0.74rem, 0.92vw, 0.88rem);
+  line-height: 1.3;
+}
+
+#activity li {
+  display: flex;
+  gap: 10px;
+  min-width: 0;
+}
+
+#activity time {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+#activity .msg {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#activity a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#activity a:hover .msg {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.empty {
+  color: var(--muted);
+}
+
+/* ----- focus ----- */
+
+a:focus-visible,
+button:focus-visible {
+  outline: 1px solid var(--text);
+  outline-offset: -2px;
+}
+
+/* ----- responsive ----- */
+
+@media (max-width: 900px) {
+  body {
+    display: block;
+    padding: 14px;
   }
 
-  .cover-wrap {
-    width: 96px;
-    height: 96px;
+  .layout {
+    width: 100%;
   }
 
-  .avatar {
-    width: 40px;
-    height: 40px;
+  .top {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    height: auto;
   }
 
-  .title {
-    font-size: 1rem;
+  .profile {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+  }
+
+  .hero {
+    grid-column: 1 / -1;
+    min-height: 172px;
+    border-right: 0;
+  }
+
+  .links {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 64px;
+    border-bottom: var(--edge) solid var(--rose);
+  }
+
+  .links .link {
+    border-bottom: 0;
+  }
+
+  .links .link + .link {
+    border-left: var(--edge) solid var(--rose);
+  }
+
+  .now {
+    height: clamp(170px, 30vw, 210px);
+  }
+
+  .right {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    height: auto;
+    margin-top: calc(var(--edge) * -1);
+  }
+
+  .right > .cell + .cell {
+    margin-left: 0;
+  }
+
+  .right > .cell + .gol {
+    margin-left: calc(var(--edge) * -1);
+  }
+
+  .top-tracks {
+    grid-column: 1 / -1;
+    height: auto;
+    min-height: 196px;
+  }
+
+  .right > .top-tracks {
+    border-left: var(--edge) solid var(--amber);
+  }
+
+  .right > .gol {
+    border-top: 0;
+  }
+
+  .discord {
+    height: auto;
+    min-height: 112px;
+  }
+
+  .gol {
+    height: auto;
+    min-height: 232px;
+  }
+
+  .log {
+    height: auto;
+    min-height: 152px;
+  }
+
+  #activity {
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .right {
+    grid-template-columns: 1fr;
+  }
+
+  .right > .cell + .gol {
+    margin-left: 0;
+  }
+
+  .right > .discord {
+    border-top: 0;
+  }
+
+  .top-tracks,
+  .discord,
+  .gol {
+    grid-column: 1;
+  }
+
+  .gol {
+    min-height: 190px;
+  }
+
+  .discord {
+    min-height: 84px;
+  }
+
+  .wordmark {
+    font-size: clamp(3.2rem, 16vw, 4.6rem);
+  }
+
+  .rotated {
+    font-size: 1.55rem;
+    transform: rotate(22deg);
   }
 }
