@@ -282,7 +282,7 @@ async def _fetch_top_tracks() -> list[dict[str, Any]]:
     try:
         resp = await _client.get(
             LISTENBRAINZ_TOP_URL,
-            params={"range": "week", "count": 3},
+            params={"range": "this_week", "count": 3},
             headers={"User-Agent": USER_AGENT},
         )
         resp.raise_for_status()
